@@ -30,18 +30,31 @@ function plier(ligne) {
   return p.join('\r\n');
 }
 
-// Charge la photo de la carte, la réduit (256 px) et la renvoie en base64 JPEG. Vide si impossible.
+// Lit un Blob en base64 (sans canvas).
+function blobEnBase64(blob) {
+  return new Promise((ok, ko) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(',')[1] || '');
+    r.onerror = ko;
+    r.readAsDataURL(blob);
+  });
+}
+
+// Charge la photo de la carte en base64 JPEG. 1) réduite à 256 px via canvas ; 2) sinon fichier tel quel. Vide si impossible.
 async function photoEnBase64(url) {
   if (!url) return '';
+  let blob;
+  try { blob = await (await fetch(url)).blob(); } catch (e) { return ''; }
   try {
-    const blob = await (await fetch(url)).blob();
     const img = await createImageBitmap(blob);
     const k = Math.min(1, 256 / Math.max(img.width, img.height));
     const c = document.createElement('canvas');
     c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
     c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    return c.toDataURL('image/jpeg', 0.85).split(',')[1] || '';
-  } catch (e) { return ''; } // sans photo, le contact s'enregistre quand même
+    const b64 = c.toDataURL('image/jpeg', 0.85).split(',')[1];
+    if (b64) return b64;
+  } catch (e) { /* repli ci-dessous */ }
+  try { return await blobEnBase64(blob); } catch (e) { return ''; }
 }
 
 function initAjout(o) {
