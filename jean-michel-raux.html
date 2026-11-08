@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carte officier — Rite Brith Israël</title>
+<style>
+  /* Couleurs par défaut (noir et or) : à remplacer par celles de la charte */
+  :root { --fond:#000; --carte:#f4f4f4; --or:#a8842c; --texte:#111; --discret:#555; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; justify-content:center; align-items:flex-start;
+         background:var(--fond); color:var(--texte); font-family:Georgia, 'Times New Roman', serif; padding:16px; }
+  .carte { width:100%; max-width:420px; background:var(--carte); border:1px solid var(--or);
+           border-radius:14px; padding:22px; text-align:left; }
+  .entete { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .blason { width:68px; height:auto; display:block; }
+  .ordre { font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--or); margin:0; text-align:right; }
+  .filet { border:0; border-top:1px solid var(--or); margin:14px 0; }
+  .identite { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .photo { width:96px; height:96px; border-radius:50%; object-fit:cover; background:#000; flex:none; }
+  .qr { width:170px; margin:20px auto; background:#fff; padding:10px; border-radius:10px; }
+  .qr svg { width:100%; height:auto; display:block; }
+  h1 { font-size:1.45rem; margin:6px 0 2px; }
+  .titre { color:var(--or); font-size:1rem; margin:0 0 4px; }
+  .grade { color:var(--discret); font-size:.88rem; margin:0 0 14px; }
+  .liens { display:flex; flex-direction:column; gap:10px; margin:18px 0; }
+  .liens a { color:var(--texte); text-decoration:none; border:1px solid var(--or);
+             border-radius:8px; padding:11px 14px; font-size:.95rem; }
+  .liens a:hover { background:var(--or); color:#000; }
+  button#ajout { width:100%; background:var(--or); color:#000; border:0; border-radius:8px;
+                 padding:13px; font-size:1rem; font-family:inherit; cursor:pointer; }
+  .devise { margin-top:18px; font-size:.8rem; color:var(--discret); }
+  .devise span[dir="rtl"] { display:block; font-size:1.1rem; color:var(--or); }
+  h1 { display:flex; align-items:center; gap:10px; }
+  h1 #nom { min-width:0; }
+  .degre { width:52px; height:52px; flex:none; }
+  .erreur { color:#e07a7a; }
+  details.perso { margin-top:18px; border-top:1px solid var(--or); padding-top:12px; font-size:.85rem; color:var(--discret); }
+  details.perso summary { cursor:pointer; color:var(--or); }
+  details.perso label { display:block; margin:10px 0 4px; }
+  details.perso input { width:100%; padding:10px; border:1px solid var(--or); border-radius:8px; font:inherit; background:#fff; }
+  details.perso .rang { display:flex; gap:8px; margin-top:12px; }
+  details.perso button { flex:1; padding:10px; border-radius:8px; border:1px solid var(--or); background:transparent; font:inherit; cursor:pointer; }
+  details.perso button.ok { background:var(--or); border:0; }
+  details.perso small { display:block; margin-top:8px; line-height:1.4; }
+</style>
+</head>
+<body>
+<main class="carte" id="carte">
+  <div class="entete">
+    <img class="blason" src="blason.png" alt="Blason du Rite Brith Israël">
+    <p class="ordre">Suprême Conseil de l'Ordre du Rite Brith Israël</p>
+  </div>
+  <hr class="filet">
+  <div class="identite">
+    <div><h1><span id="nom"></span> <img class="degre" src="degre32.png" alt="32°" title="32e degré"></h1><p class="titre" id="titre"></p></div>
+    <img class="photo" id="photo" alt="" hidden>
+  </div>
+  <div class="liens" id="liens"></div>
+  <button id="ajout" hidden>Ajouter aux contacts</button>
+  <div class="qr" id="qr" hidden></div>
+  <p class="devise" id="qrlegende" style="text-align:center;margin-top:-8px" hidden>Scannez pour enregistrer le contact</p>
+  <details class="perso" id="perso">
+    <summary>C'est ma carte : ajouter mon téléphone ou mon e-mail</summary>
+    <label for="p-tel">Mon téléphone (facultatif)</label>
+    <input id="p-tel" type="tel" autocomplete="tel" placeholder="06 12 34 56 78">
+    <label for="p-mail">Mon e-mail personnel (facultatif)</label>
+    <input id="p-mail" type="email" autocomplete="email" placeholder="prenom@exemple.fr">
+    <div class="rang"><button class="ok" id="p-ok">Enregistrer</button><button id="p-eff">Effacer</button></div>
+    <small>Ces informations restent uniquement sur cet appareil : elles ne sont envoyées nulle part. Elles servent à votre QR code et à votre fichier contact. Seul vous les voyez, sauf si vous les transmettez vous-même.</small>
+  </details>
+  <p class="devise"><span dir="rtl">חי חי חי וקיים</span>Haï Haï Haï Veqayam — « Vivant, vivant, vivant et perdurant »</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="vcard.js"></script>
+<script>window.CARTE_ID = "jean-michel-raux";</script>
+<script>
+// Charge officiers.json et affiche l'officier demandé : card.html?id=prenom-nom
+// Seuls les champs renseignés sont affichés (aucun champ inventé).
+// Téléphone et e-mail personnels : saisis par l'officier lui-même, gardés dans SON navigateur uniquement.
+const id = window.CARTE_ID || new URLSearchParams(location.search).get('id');
+const $ = s => document.getElementById(s);
+const CLE = 'rbi-carte-' + id;
+
+function lire() { try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch (e) { return {}; } }
+function ecrire(v) { try { v ? localStorage.setItem(CLE, JSON.stringify(v)) : localStorage.removeItem(CLE); return true; } catch (e) { return false; } }
+
+function ligne(href, texte) {
+  const a = document.createElement('a');
+  a.href = href; a.textContent = texte;
+  $('liens').appendChild(a);
+}
+
+function rendre() { // (re)construit liens, bouton et QR à partir de window.OFFICIER
+  const o = window.OFFICIER;
+  $('liens').innerHTML = '';
+  if (o.tel) ligne('tel:' + o.tel.replace(/\s/g, ''), o.tel);
+  if (o.email) ligne('mailto:' + o.email, o.email);
+  if (o.emailPerso) ligne('mailto:' + o.emailPerso, o.emailPerso);
+  if (o.site) ligne(o.site, o.site.replace(/^https?:\/\//, ''));
+  initAjout(o);
+  try {
+    qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8']; // accents et tirets
+    const q = qrcode(0, 'M');
+    q.addData(construireVcard(o)); // le QR contient la fiche contact (vCard)
+    q.make();
+    $('qr').innerHTML = q.createSvgTag(4);
+    $('qr').hidden = false; $('qrlegende').hidden = false;
+  } catch (e) { /* bibliothèque QR indisponible : la carte reste utilisable */ }
+}
+
+function brancherPerso(base) { // formulaire « C'est ma carte »
+  const s = lire();
+  $('p-tel').value = s.tel || ''; $('p-mail').value = s.emailPerso || '';
+  const appliquer = v => { window.OFFICIER = { ...base, tel: (v && v.tel) || base.tel, emailPerso: (v && v.emailPerso) || '' }; rendre(); };
+  $('p-ok').onclick = () => {
+    const v = { tel: $('p-tel').value.trim(), emailPerso: $('p-mail').value.trim() };
+    ecrire(v.tel || v.emailPerso ? v : null); appliquer(v); $('perso').open = false;
+  };
+  $('p-eff').onclick = () => { ecrire(null); $('p-tel').value = ''; $('p-mail').value = ''; appliquer(null); };
+  appliquer(s);
+}
+
+fetch('officiers.json')
+  .then(r => r.json())
+  .then(data => {
+    const c = data.commun;
+    const o = data.officiers.find(x => x.id === id);
+    if (!o) throw new Error('Officier introuvable');
+    document.title = o.prenom + ' ' + o.nom + ' — Rite Brith Israël';
+    $('nom').textContent = o.prenom + ' ' + o.nom;
+    $('titre').textContent = o.fonction || '';
+    if (o.photo) { $('photo').src = o.photo; $('photo').hidden = false; }
+    brancherPerso({ ...o, email: c.email, site: c.site, organisation: c.organisation });
+  })
+  .catch(() => { $('nom').textContent = 'Carte introuvable'; $('nom').className = 'erreur'; });
+</script>
+</body>
+</html>

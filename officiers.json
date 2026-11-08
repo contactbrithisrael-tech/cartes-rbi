@@ -1,0 +1,65 @@
+{
+  "commun": {
+    "organisation": "Suprême Conseil de l'Ordre du Rite Brith Israël",
+    "email": "contact.brith.israel@gmail.com",
+    "site": "https://www.brith-israel.org"
+  },
+  "officiers": [
+    {
+      "id": "jean-michel-raux",
+      "prenom": "Jean-Michel",
+      "nom": "RAUX",
+      "fonction": "Grand Maître Adjoint — Lieutenant Souverain Grand Commandeur",
+      "tel": "",
+      "photo": "photos/jean-michel-raux.jpg"
+    },
+    {
+      "id": "martine-habert",
+      "prenom": "Martine",
+      "nom": "HABERT",
+      "fonction": "Grand Maître Adjoint — Grand Secrétaire",
+      "tel": "",
+      "photo": "photos/martine-habert.jpg"
+    },
+    {
+      "id": "jean-louis-carillo",
+      "prenom": "Jean-Louis",
+      "nom": "CARILLO",
+      "fonction": "Grand Maître Adjoint — Grand Expert",
+      "tel": "",
+      "photo": "photos/jean-louis-carillo.jpg"
+    },
+    {
+      "id": "didier-buhler",
+      "prenom": "Didier",
+      "nom": "BUHLER",
+      "fonction": "Assistant Grand Maître — Grand Chancelier",
+      "tel": "",
+      "photo": "photos/didier-buhler.jpg"
+    },
+    {
+      "id": "valerie-roume",
+      "prenom": "Valérie",
+      "nom": "ROUME",
+      "fonction": "Assistant Grand Maître — Grand Orateur",
+      "tel": "",
+      "photo": "photos/valerie-roume.jpg"
+    },
+    {
+      "id": "pierre-jourdan",
+      "prenom": "Pierre",
+      "nom": "JOURDAN",
+      "fonction": "Assistant Grand Maître — Grand Hospitalier",
+      "tel": "",
+      "photo": "photos/pierre-jourdan.jpg"
+    },
+    {
+      "id": "sam-gasmi-khanafer",
+      "prenom": "Sam",
+      "nom": "GASMI KHANAFER",
+      "fonction": "Assistant Grand Maître — Grand Trésorier",
+      "tel": "",
+      "photo": "photos/sam-gasmi-khanafer.jpg"
+    }
+  ]
+}
