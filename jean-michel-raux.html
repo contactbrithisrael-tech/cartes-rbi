@@ -3,22 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carte officier — Rite Brith Israël</title>
 <style>
-  /* Couleurs par défaut (noir et or) : à remplacer par celles de la charte */
-  :root { --fond:#000; --carte:#f4f4f4; --or:#a8842c; --texte:#111; --discret:#555; }
+  /* Fiche noire, écriture blanche, filets or */
+  :root { --fond:#000; --carte:#0a0a0a; --or:#c9a24a; --texte:#fff; --discret:#bdbdbd; }
   * { box-sizing:border-box; }
   body { margin:0; min-height:100vh; display:flex; justify-content:center; align-items:flex-start;
          background:var(--fond); color:var(--texte); font-family:Georgia, 'Times New Roman', serif; padding:16px; }
   .carte { width:100%; max-width:420px; background:var(--carte); border:1px solid var(--or);
            border-radius:14px; padding:22px; text-align:left; }
   .entete { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-  .blason { width:104px; height:auto; display:block; }
+  .blason { width:118px; height:auto; display:block; }
   .ordre { font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--or); margin:0; text-align:right; }
   .filet { border:0; border-top:1px solid var(--or); margin:14px 0; }
   .identite { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-  .photo { width:96px; height:96px; border-radius:50%; object-fit:cover; background:#000; flex:none; }
+  .photo { width:96px; height:96px; border-radius:50%; object-fit:cover; background:#000; flex:none; border:2px solid var(--or); }
   .qr { width:170px; margin:20px auto; background:#fff; padding:10px; border-radius:10px; }
   .qr svg { width:100%; height:auto; display:block; }
   h1 { font-size:1.45rem; margin:6px 0 2px; }
@@ -39,10 +40,10 @@
   details.perso { margin-top:18px; border-top:1px solid var(--or); padding-top:12px; font-size:.85rem; color:var(--discret); }
   details.perso summary { cursor:pointer; color:var(--or); }
   details.perso label { display:block; margin:10px 0 4px; }
-  details.perso input { width:100%; padding:10px; border:1px solid var(--or); border-radius:8px; font:inherit; background:#fff; }
+  details.perso input { width:100%; padding:10px; border:1px solid var(--or); border-radius:8px; font:inherit; background:#fff; color:#111; }
   details.perso .rang { display:flex; gap:8px; margin-top:12px; }
-  details.perso button { flex:1; padding:10px; border-radius:8px; border:1px solid var(--or); background:transparent; font:inherit; cursor:pointer; }
-  details.perso button.ok { background:var(--or); border:0; }
+  details.perso button { flex:1; padding:10px; border-radius:8px; border:1px solid var(--or); background:transparent; color:var(--texte); font:inherit; cursor:pointer; }
+  details.perso button.ok { background:var(--or); color:#000; border:0; }
   details.perso small { display:block; margin-top:8px; line-height:1.4; }
 </style>
 </head>
